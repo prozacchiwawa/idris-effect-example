@@ -31,7 +31,6 @@ data AssertionInfo : AssertionState -> Type where
 data AssertionEff : Effect where
      FailAssertion : sig AssertionEff () (AssertionInfo NotFailed) (AssertionInfo Failed)
      OkAssertion : sig AssertionEff () (AssertionInfo NotFailed) (AssertionInfo NotFailed)
-     StartAssertion : sig AssertionEff () (AssertionInfo NotFailed)
 
 {- The EFFECT is what makes what would in purescript have been called an 
  - 'effect row' before 0.12.  This wraps the AssertionState value into a
@@ -57,8 +56,6 @@ implementation Handler AssertionEff IO where
     putStrLn "Assertion failed"
     k () DI
   handle res OkAssertion k = do
-    k () DI
-  handle res StartAssertion k = do
     k () DI
 
 {- Default does this:
