@@ -75,9 +75,14 @@ implementation Default (AssertionInfo NotFailed) where
  - code using this effect to be well typed, we must prove that x is True in
  - every case.
  -}
-assert : (x : Bool) -> Eff () [ASSERTION NotFailed] [ASSERTION (if x then NotFailed else Failed)]
-assert False = call FailAssertion
-assert True = call OkAssertion
+assert : (x : Bool) -> (prf : (x = True)) -> Eff () [ASSERTION NotFailed] [ASSERTION (if x then NotFailed else Failed)]
+assert False _    = call FailAssertion
+assert True  Refl = call OkAssertion
+
+-- A simple proof to give assert in this case.
+trueEqualsTrue : (x : Bool) -> (if x then (x = True) else (x = True) -> Void)
+trueEqualsTrue True = Refl
+trueEqualsTrue False = absurd 
 
 {- Try calling it.  Hangman example splits the code into 'game', which gives
  - Eff three arguments; the result of the whole expression, a starting effect
@@ -88,13 +93,8 @@ assert True = call OkAssertion
 doTryAssert : Eff () [ASSERTION NotFailed] [ASSERTION NotFailed]
 doTryAssert =
   do
-    assert True
-
--- FailAssert is not well typed.
--- failAssert : Eff () [ASSERTION NotFailed] [ASSERTION NotFailed]
--- failAssert =
---   do
---     assert False
+    let x = True -- Not well typed if x is False
+    assert x (trueEqualsTrue x)
 
 {- A function suitable for use with Effect's "run" function.
  - calls doTryAssert above (3 argument form of Eff) with an expected target
