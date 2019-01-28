@@ -84,6 +84,10 @@ trueEqualsTrue : (x : Bool) -> (if x then (x = True) else (x = True) -> Void)
 trueEqualsTrue True = Refl
 trueEqualsTrue False = absurd 
 
+-- Another proof
+twoIsLessThanThree : (2 /= 3) = True
+twoIsLessThanThree = Refl
+
 {- Try calling it.  Hangman example splits the code into 'game', which gives
  - Eff three arguments; the result of the whole expression, a starting effect
  - state and an expected ending effect state and 'runGame', which uses the
@@ -95,6 +99,8 @@ doTryAssert =
   do
     let x = True -- Not well typed if x is False
     assert x (trueEqualsTrue x)
+    let y = 2 /= 3 -- Not well typed for 3 /= 3
+    assert y (twoIsLessThanThree)
 
 {- A function suitable for use with Effect's "run" function.
  - calls doTryAssert above (3 argument form of Eff) with an expected target
