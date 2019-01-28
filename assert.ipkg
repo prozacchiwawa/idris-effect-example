@@ -1,0 +1,7 @@
+package assert
+
+modules = Artyssert.Assert
+opts = "-p effects"
+
+executable = assert
+main = Artyssert.Assert

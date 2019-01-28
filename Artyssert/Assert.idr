@@ -30,5 +30,5 @@ implementation Handler AssertionEff IO where
   handle res OkAssertion k = do
     k () DI
 
-main : IO ()
-main = runInit [ASSERTION NotFailed] doTryAssert
+--main : IO ()
+--main = runInit [ASSERTION NotFailed] doTryAssert
